@@ -32,6 +32,14 @@ namespace NLayerProject.API.Controllers
             return Ok(_mapper.Map<IEnumerable<CategoryDto>>(categories));
         }
 
+        [HttpGet("{id}/products")]
+        public async Task<IActionResult> GetProductsGetByWithId(int id)
+        {
+            var category = await _categoryService.GetWithProductsByIdAsync(id);
+
+            return Ok(_mapper.Map<CategoryWithProductsDto>(category));
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -63,5 +71,7 @@ namespace NLayerProject.API.Controllers
 
             return NoContent();
         }
+
+       
     }
 }
