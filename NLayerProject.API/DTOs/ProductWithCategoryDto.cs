@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace NLayerProject.API.DTOs
 {
-    public class CategoryWithProductsDto : CategoryDto
+    public class ProductWithCategoryDto : ProductDto
     {
-        public ICollection<ProductDto> Products { get; set; }
+        public CategoryDto Category { get; set; }
     }
 }
