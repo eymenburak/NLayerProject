@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NLayerProject.API.DTOs;
+using NLayerProject.API.Filters;
 using NLayerProject.Core.Models;
 using NLayerProject.Core.Services;
 using System;
@@ -27,11 +28,13 @@ namespace NLayerProject.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
+            //throw new Exception("error Not Found ");
             var products = await _productService.GetAllAsync();
             return Ok(_mapper.Map<IEnumerable<ProductDto>>(products));
         }
 
         [HttpGet("{id}")]
+        [ServiceFilter(typeof(NotFoundFilter))]
         public async Task<IActionResult> GetById(int id)
         {
             var product = await _productService.GetByIdAsync(id);
@@ -39,6 +42,7 @@ namespace NLayerProject.API.Controllers
         }
 
         [HttpGet("{id}/category")]
+        [ServiceFilter(typeof(NotFoundFilter))]
         public async Task<IActionResult> GetWithCategoryById(int id)
         {
             var product = await _productService.GetWithCategoryByIdAsync(id);
@@ -61,6 +65,7 @@ namespace NLayerProject.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [ServiceFilter(typeof(NotFoundFilter))]
         public IActionResult Remove(int id)
         {
             var product = _productService.GetByIdAsync(id).Result;
