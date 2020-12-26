@@ -1,28 +1,28 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using NLayerProject.API.DTOs;
 using NLayerProject.Core.Services;
+using NLayerProject.Web.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NLayerProject.API.Filters
+namespace NLayerProject.Web.Filters
 {
     public class NotFoundFilter :ActionFilterAttribute
     {
-        private readonly ICategoryService _categoryService;
+        private readonly IProductService _productService;
 
-        public NotFoundFilter(ICategoryService categoryService)
+        public NotFoundFilter(IProductService productService)
         {
-            _categoryService = categoryService;
+            _productService = productService;
         }
 
         public async override Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             int id = (int)context.ActionArguments.Values.FirstOrDefault();
 
-            var product = await _categoryService.GetByIdAsync(id);
+            var product = await _productService.GetByIdAsync(id);
 
             if (product != null)
             {
@@ -32,10 +32,9 @@ namespace NLayerProject.API.Filters
             else
             {
                 ErrorDto error = new ErrorDto();
-                error.Status = 404;
                 error.Errors.Add($"id {id} was not found in DB ");
 
-                context.Result = new NotFoundObjectResult(error);
+                context.Result = new RedirectToActionResult("Error", "Home", error);
             }
         }
     }
